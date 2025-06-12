@@ -96,7 +96,11 @@ class RepoAPIs(SequentialTaskSet):
 
         self.image_name = f"jfdimg-{self.uniq_idn}"
         self.tag_name = f"V1.0-{self.uniq_idn}"
-        self.docker_image = self.docker_client.images.get("alpine:3.9")
+        try:
+            self.docker_image = self.docker_client.images.get("alpine:3.9")
+        except docker.errors.ImageNotFound:
+            print("alpine:3.9 not found locally. Pulling from Docker Hub...")
+            self.docker_image = self.docker_client.images.pull("alpine:3.9")
 
         self.docker_image.tag(f"trials6p3nw.jfrog.io/{self.repo_name}/{self.image_name}", tag=self.tag_name)
         self.docker_client.images.push(f"trials6p3nw.jfrog.io/{self.repo_name}/{self.image_name}")

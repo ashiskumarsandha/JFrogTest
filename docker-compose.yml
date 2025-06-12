@@ -1,0 +1,54 @@
+services:
+  master:
+    build: .
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./:/mnt/locust
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - UserCount=${UserCount}
+      - UserRate=${UserRate}
+      - Duration=${Duration}
+      - HostUrl=${HostUrl}
+    command: >
+      -f /mnt/locust/CreateScanRepo/RepoScenario.py --master 
+      --expect-workers 3 
+      --headless 
+      --only-summary 
+      -u ${UserCount} 
+      -r ${UserRate} 
+      -t ${Duration} 
+      --html /mnt/locust/Results/myrun.html 
+      --csv /mnt/locust/Results/csvresults
+      --host ${HostUrl}
+
+  worker1:
+    build: .
+    user: root
+    depends_on:
+      - master
+    volumes:
+      - ./:/mnt/locust
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: -f /mnt/locust/CreateScanRepo/RepoScenario.py --worker --master-host master
+
+  worker2:
+    build: .
+    user: root
+    depends_on:
+      - master
+    volumes:
+      - ./:/mnt/locust
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: -f /mnt/locust/CreateScanRepo/RepoScenario.py --worker --master-host master
+
+  worker3:
+    build: .
+    user: root
+    depends_on:
+      - master
+    volumes:
+      - ./:/mnt/locust
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: -f /mnt/locust/CreateScanRepo/RepoScenario.py --worker --master-host master

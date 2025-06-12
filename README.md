@@ -15,3 +15,9 @@
 
 **Execution**
   Command : **$env:UserCount="1"; $env:UserRate="1"; $env:Duration="30m";$env:HostUrl="https://trials6p3nw.jfrog.io/"; docker-compose up --build**
+
+**Explanation**
+    UserCount : Total User load for the performance test
+    UserRate : User arrival rate per second
+    Duration : Total Test duration (e.g. For 30 Minute : 30m, For 30 Seconds : 30s)
+    HostUrl : Application URL
